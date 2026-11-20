@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fff6f4">
+  <meta name="description" content="A tiny love-filled question for someone special.">
+  <title>A Little Love Question</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #592b3c;
+      --muted: #9c7380;
+      --rose: #ed7896;
+      --deep-rose: #dc587c;
+      --cream: #fffaf5;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      min-height: 100svh;
+      margin: 0;
+      overflow: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 12% 18%, rgba(255, 210, 218, .74), transparent 35%),
+        radial-gradient(ellipse at 88% 82%, rgba(255, 225, 203, .76), transparent 34%),
+        linear-gradient(135deg, #fff8f5 0%, #fff0f2 48%, #fff8f0 100%);
+      font-family: "DM Sans", sans-serif;
+    }
+
+    button { font: inherit; }
+
+    .ambient {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ambient-heart {
+      position: absolute;
+      bottom: -50px;
+      color: rgba(224, 112, 145, .24);
+      font-size: var(--size);
+      animation: drift-up var(--duration) linear var(--delay) infinite;
+      filter: blur(.15px);
+    }
+
+    .glow {
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .48);
+      filter: blur(35px);
+    }
+
+    .glow-one { top: -190px; right: 12%; }
+    .glow-two { bottom: -220px; left: 7%; }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      min-height: 100vh;
+      min-height: 100svh;
+      place-items: center;
+      padding: 28px 20px;
+    }
+
+    .experience {
+      width: min(100%, 520px);
+      text-align: center;
+      animation: arrive 850ms cubic-bezier(.2, .8, .2, 1) both;
+    }
+
+    .eyebrow {
+      margin: 0 0 5px;
+      color: var(--deep-rose);
+      font-family: "Caveat", cursive;
+      font-size: clamp(2.15rem, 7vw, 2.8rem);
+      font-weight: 600;
+      line-height: 1.05;
+      transform: rotate(-2deg);
+    }
+
+    .subtitle {
+      margin: 12px 0 24px;
+      color: var(--muted);
+      font-size: .96rem;
+      letter-spacing: .015em;
+    }
+
+    .card {
+      position: relative;
+      padding: 37px 38px 31px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .83);
+      border-radius: 30px;
+      background: rgba(255, 253, 251, .72);
+      box-shadow: 0 24px 70px rgba(151, 77, 102, .13), 0 3px 14px rgba(151, 77, 102, .055), inset 0 1px 0 rgba(255, 255, 255, .9);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      transition: opacity 220ms ease, transform 220ms ease;
+    }
+
+    .card::before {
+      position: absolute;
+      top: 0;
+      left: 16%;
+      width: 68%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(237, 120, 150, .58), transparent);
+      content: "";
+    }
+
+    .card.is-changing {
+      opacity: 0;
+      transform: translateY(10px) scale(.97);
+    }
+
+    .card.is-entering { animation: card-enter 480ms cubic-bezier(.2, .8, .2, 1) both; }
+
+    .little-heart {
+      display: grid;
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 15px;
+      place-items: center;
+      border: 1px solid rgba(237, 120, 150, .18);
+      border-radius: 50%;
+      background: linear-gradient(145deg, #fff5f5, #ffe9ee);
+      box-shadow: 0 5px 15px rgba(220, 88, 124, .11);
+      color: var(--deep-rose);
+      font-size: 1.4rem;
+      animation: heart-beat 2.1s ease-in-out infinite;
+    }
+
+    .progress {
+      margin: 0 0 14px;
+      color: #b28b96;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .progress-track {
+      width: 112px;
+      height: 4px;
+      margin: 0 auto 25px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: #f5e3e7;
+    }
+
+    .progress-fill {
+      width: 16.6667%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #f3a5b6, #dd6382);
+      transition: width 350ms ease;
+    }
+
+    .question {
+      min-height: 2.5em;
+      margin: 0;
+      color: var(--ink);
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(1.65rem, 6vw, 2.2rem);
+      font-weight: 600;
+      line-height: 1.28;
+      letter-spacing: -.025em;
+    }
+
+    .prompt-hint {
+      min-height: 1.4em;
+      margin: 11px 0 27px;
+      color: #a5808a;
+      font-size: .87rem;
+    }
+
+    .actions {
+      display: flex;
+      min-height: 52px;
+      align-items: center;
+      justify-content: center;
+      gap: 13px;
+    }
+
+    .choice {
+      position: relative;
+      min-height: 48px;
+      padding: 0 23px;
+      border: 0;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: .84rem;
+      font-weight: 700;
+      letter-spacing: .02em;
+      transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .choice:active { transform: scale(.96); }
+
+    .yes {
+      z-index: 2;
+      min-width: 132px;
+      color: white;
+      background: linear-gradient(135deg, #f28aa4, #de5d7e);
+      box-shadow: 0 8px 20px rgba(220, 88, 124, .27), inset 0 1px 0 rgba(255, 255, 255, .35);
+    }
+
+    .yes:hover {
+      transform: translateY(-2px) scale(1.025);
+      box-shadow: 0 11px 25px rgba(220, 88, 124, .34), 0 0 22px rgba(242, 138, 164, .2);
+    }
+
+    .no {
+      z-index: 3;
+      min-width: 92px;
+      color: #9b7280;
+      border: 1px solid rgba(210, 169, 180, .54);
+      background: rgba(255, 255, 255, .76);
+      box-shadow: 0 5px 13px rgba(106, 63, 77, .09);
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .no.is-escaping {
+      position: fixed;
+      margin: 0;
+      transition: left 280ms cubic-bezier(.2, .8, .2, 1), top 280ms cubic-bezier(.2, .8, .2, 1), transform 180ms ease;
+    }
+
+    .no:hover { transform: rotate(-5deg) scale(1.06); }
+
+    .footer-note {
+      margin: 22px 0 0;
+      color: rgba(130, 88, 101, .61);
+      font-size: .73rem;
+      letter-spacing: .02em;
+    }
+
+    .footer-note span { color: #dc7890; }
+
+    .effect {
+      position: fixed;
+      z-index: 10;
+      left: var(--x);
+      top: var(--y);
+      pointer-events: none;
+      will-change: transform, opacity;
+      animation: celebrate var(--duration) cubic-bezier(.15, .65, .35, 1) var(--delay) forwards;
+    }
+
+    .effect.heart { color: var(--color); font-size: var(--size); }
+    .effect.petal {
+      width: var(--size);
+      height: calc(var(--size) * 1.38);
+      border-radius: 80% 10% 70% 45%;
+      background: linear-gradient(145deg, #ffc4cf, #dd718c);
+      box-shadow: 0 2px 6px rgba(178, 70, 99, .15);
+    }
+
+    .effect.sparkle {
+      color: #f4bf66;
+      font-size: var(--size);
+      text-shadow: 0 0 14px rgba(244, 191, 102, .7);
+    }
+
+    @keyframes drift-up {
+      0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(-12deg); }
+      12% { opacity: .8; }
+      85% { opacity: .65; }
+      100% { opacity: 0; transform: translate3d(var(--sway), -115vh, 0) rotate(25deg); }
+    }
+
+    @keyframes arrive {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes card-enter {
+      from { opacity: 0; transform: translateY(12px) scale(.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes heart-beat {
+      0%, 100% { transform: scale(1); }
+      8% { transform: scale(1.12); }
+      16% { transform: scale(1); }
+      24% { transform: scale(1.08); }
+      32% { transform: scale(1); }
+    }
+
+    @keyframes celebrate {
+      0% { opacity: 0; transform: translate(-50%, -40%) scale(.35) rotate(0deg); }
+      12% { opacity: 1; }
+      72% { opacity: 1; }
+      100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.05) rotate(var(--rotate)); }
+    }
+
+    @media (max-width: 480px) {
+      .page { padding: 20px 17px; }
+      .subtitle { margin-bottom: 20px; font-size: .9rem; }
+      .card { padding: 30px 19px 25px; border-radius: 25px; }
+      .progress-track { margin-bottom: 21px; }
+      .prompt-hint { margin-bottom: 23px; }
+      .actions { gap: 9px; }
+      .choice { padding: 0 17px; font-size: .78rem; }
+      .yes { min-width: 125px; }
+      .no { min-width: 78px; }
+      .footer-note { margin-top: 18px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient" id="ambient" aria-hidden="true">
+    <span class="glow glow-one"></span>
+    <span class="glow glow-two"></span>
+  </div>
+
+  <main class="page">
+    <section class="experience" aria-labelledby="greeting">
+      <h1 class="eyebrow" id="greeting">Hey Beautiful! <span aria-hidden="true">💗</span></h1>
+      <p class="subtitle">I have a few questions for you...</p>
+
+      <section class="card" id="question-card" aria-live="polite">
+        <div class="little-heart" aria-hidden="true">♥</div>
+        <p class="progress" id="progress">Question 1 of 6</p>
+        <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progress-fill"></div></div>
+        <h2 class="question" id="question">Are you a girl?</h2>
+        <p class="prompt-hint" id="hint">Be honest... I can take it (maybe).</p>
+        <div class="actions" id="actions">
+          <button class="choice yes" id="yes-button" type="button">YES</button>
+          <button class="choice no" id="no-button" type="button">NO</button>
+        </div>
+      </section>
+
+      <p class="footer-note">Made with a little too much <span aria-hidden="true">♥</span> and a lot of courage</p>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const questions = [
+        { text: "Are you a girl?", hint: "Be honest... I can take it (maybe)." },
+        { text: "Are you alive?", hint: "This is going well so far, right?" },
+        { text: "Are you pretty?", hint: "Okay, this one's an easy one." },
+        { text: "Do you like my personality?", hint: "No pressure. Just a tiny bit of pressure." },
+        { text: "Do you love me?", hint: "My heart is doing a little drum solo..." },
+        { text: "Do you want to go on a date?", hint: "I already know a very cute person to ask. 💗" }
+      ];
+      const instagramUrl = "https://www.instagram.com/krishna.nhihu/?hl=en";
+      const card = document.getElementById("question-card");
+      const question = document.getElementById("question");
+      const hint = document.getElementById("hint");
+      const progress = document.getElementById("progress");
+      const progressFill = document.getElementById("progress-fill");
+      const yesButton = document.getElementById("yes-button");
+      const noButton = document.getElementById("no-button");
+      const ambient = document.getElementById("ambient");
+      let currentQuestion = 0;
+      let pointer = { x: -1000, y: -1000 };
+
+      for (let i = 0; i < 13; i += 1) {
+        const heart = document.createElement("span");
+        heart.className = "ambient-heart";
+        heart.textContent = i % 3 === 0 ? "♥" : "♡";
+        heart.style.left = `${Math.random() * 100}%`;
+        heart.style.setProperty("--size", `${12 + Math.random() * 20}px`);
+        heart.style.setProperty("--duration", `${13 + Math.random() * 15}s`);
+        heart.style.setProperty("--delay", `${-Math.random() * 25}s`);
+        heart.style.setProperty("--sway", `${Math.round(Math.random() * 100 - 50)}px`);
+        ambient.appendChild(heart);
+      }
+
+      function burst() {
+        const bounds = card.getBoundingClientRect();
+        const originX = bounds.left + bounds.width / 2;
+        const originY = bounds.top + bounds.height * .58;
+        const pieces = [
+          ...Array.from({ length: 14 }, () => ({ type: "heart", glyph: Math.random() > .5 ? "♥" : "♡" })),
+          ...Array.from({ length: 13 }, () => ({ type: "petal", glyph: "" })),
+          ...Array.from({ length: 9 }, () => ({ type: "sparkle", glyph: "✦" }))
+        ];
+
+        pieces.forEach((piece) => {
+          const element = document.createElement("span");
+          element.className = `effect ${piece.type}`;
+          element.textContent = piece.glyph;
+          element.style.setProperty("--x", `${originX}px`);
+          element.style.setProperty("--y", `${originY}px`);
+          element.style.setProperty("--dx", `${Math.round(Math.random() * 440 - 220)}px`);
+          element.style.setProperty("--dy", `${Math.round(Math.random() * 440 - 280)}px`);
+          element.style.setProperty("--rotate", `${Math.round(Math.random() * 150 - 75)}deg`);
+          element.style.setProperty("--size", `${piece.type === "petal" ? 9 + Math.random() * 9 : 12 + Math.random() * 16}px`);
+          element.style.setProperty("--duration", `${900 + Math.random() * 700}ms`);
+          element.style.setProperty("--delay", `${Math.random() * 150}ms`);
+          element.style.setProperty("--color", ["#e76b8b", "#f398aa", "#c95778", "#f6a4b7"][Math.floor(Math.random() * 4)]);
+          document.body.appendChild(element);
+          element.addEventListener("animationend", () => element.remove(), { once: true });
+        });
+      }
+
+      function resetNoButton() {
+        document.getElementById("actions").appendChild(noButton);
+        noButton.classList.remove("is-escaping");
+        noButton.style.left = "";
+        noButton.style.top = "";
+      }
+
+      function changeQuestion() {
+        card.classList.add("is-changing");
+        window.setTimeout(() => {
+          currentQuestion += 1;
+          const next = questions[currentQuestion];
+          question.textContent = next.text;
+          hint.textContent = next.hint;
+          progress.textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+          progressFill.style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
+          yesButton.textContent = currentQuestion === 4 ? "YES, I LOVE YOU ❤️" : currentQuestion === 5 ? "YES, MESSAGE YOU ON INSTA 🥺💗" : "YES";
+          resetNoButton();
+          card.classList.remove("is-changing");
+          card.classList.add("is-entering");
+          window.setTimeout(() => card.classList.remove("is-entering"), 500);
+        }, 220);
+      }
+
+      function sayYes() {
+        burst();
+        if (currentQuestion === questions.length - 1) {
+          window.open(instagramUrl, "_blank", "noopener,noreferrer");
+          question.textContent = "It's a date! 💗";
+          hint.textContent = "Your next message is just a little tap away...";
+          progress.textContent = "Question 6 of 6 · happily ever after";
+          progressFill.style.width = "100%";
+          document.getElementById("actions").remove();
+          return;
+        }
+        changeQuestion();
+      }
+
+      function moveNoButton(event) {
+        if (event) {
+          pointer = { x: event.clientX, y: event.clientY };
+          if (event.cancelable) event.preventDefault();
+        }
+        const bounds = noButton.getBoundingClientRect();
+        const margin = 12;
+        const maxX = Math.max(margin, window.innerWidth - bounds.width - margin);
+        const maxY = Math.max(margin, window.innerHeight - bounds.height - margin);
+        const yesBounds = yesButton.getBoundingClientRect();
+        let destination = { x: margin, y: margin };
+        let found = false;
+
+        for (let attempt = 0; attempt < 80; attempt += 1) {
+          const x = margin + Math.random() * Math.max(0, maxX - margin);
+          const y = margin + Math.random() * Math.max(0, maxY - margin);
+          const overlapsYes = x < yesBounds.right + 18 && x + bounds.width > yesBounds.left - 18 &&
+            y < yesBounds.bottom + 18 && y + bounds.height > yesBounds.top - 18;
+          const underPointer = Math.abs(x + bounds.width / 2 - pointer.x) < bounds.width / 2 + 22 &&
+            Math.abs(y + bounds.height / 2 - pointer.y) < bounds.height / 2 + 22;
+          if (!overlapsYes && !underPointer) {
+            destination = { x, y };
+            found = true;
+            break;
+          }
+        }
+
+        if (!found) {
+          destination = { x: Math.min(maxX, Math.max(margin, window.innerWidth - bounds.width - margin)), y: margin };
+        }
+        if (!noButton.classList.contains("is-escaping")) document.body.appendChild(noButton);
+        noButton.classList.add("is-escaping");
+        noButton.style.left = `${destination.x}px`;
+        noButton.style.top = `${destination.y}px`;
+      }
+
+      document.addEventListener("pointermove", (event) => {
+        pointer = { x: event.clientX, y: event.clientY };
+      }, { passive: true });
+      noButton.addEventListener("pointerenter", moveNoButton);
+      noButton.addEventListener("pointerdown", moveNoButton);
+      noButton.addEventListener("touchstart", moveNoButton, { passive: false });
+      noButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        moveNoButton(event);
+      });
+      noButton.addEventListener("focus", () => moveNoButton());
+      noButton.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          moveNoButton();
+        }
+      });
+      yesButton.addEventListener("click", sayYes);
+      window.addEventListener("resize", () => {
+        if (!noButton.classList.contains("is-escaping")) return;
+        const bounds = noButton.getBoundingClientRect();
+        noButton.style.left = `${Math.max(12, Math.min(bounds.left, window.innerWidth - bounds.width - 12))}px`;
+        noButton.style.top = `${Math.max(12, Math.min(bounds.top, window.innerHeight - bounds.height - 12))}px`;
+      });
+    })();
+  </script>
+</body>
+</html>
